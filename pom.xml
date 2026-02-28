@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.comp367</groupId>
@@ -51,20 +50,3 @@
         </plugins>
     </build>
 </project>
-```
-
-3. **Save** the file
-4. Right-click on project → **Maven** → **Update Project**
-5. Click **"OK"**
-
----
-
-## ✅ Your Project Structure Should Look Like:
-```
-comp367-webapp
-├── src/main/webapp
-│   ├── WEB-INF
-│   │   └── web.xml
-│   └── index.jsp
-├── pom.xml
-└── (other Eclipse files)
