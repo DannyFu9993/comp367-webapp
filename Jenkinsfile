@@ -5,8 +5,13 @@ pipeline {
         maven 'Maven'
     }
     
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('CredentialID_DockerHubPWD')
+        DOCKER_IMAGE = 'dannyfu9993/comp367-webapp'
+    }
+    
     stages {
-        stage('Checkout') {
+        stage('Check out') {
             steps {
                 echo 'Checking out code from GitHub...'
                 git branch: 'main',
@@ -14,35 +19,45 @@ pipeline {
             }
         }
         
-        stage('Build') {
+        stage('Build maven project') {
             steps {
                 echo 'Building with Maven...'
-                bat 'mvn clean compile'
+                bat 'mvn clean install'
             }
         }
         
-        stage('Test') {
+        stage('Docker login') {
             steps {
-                echo 'Running tests...'
-                bat 'mvn test'
+                echo 'Logging into Docker Hub...'
+                bat 'docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%'
             }
         }
         
-        stage('Package') {
+        stage('Docker build') {
             steps {
-                echo 'Packaging application...'
-                bat 'mvn package'
+                echo 'Building Docker image...'
+                bat 'docker build -t %DOCKER_IMAGE%:1.0 .'
+            }
+        }
+        
+        stage('Docker push') {
+            steps {
+                echo 'Pushing Docker image to Docker Hub...'
+                bat 'docker push %DOCKER_IMAGE%:1.0'
             }
         }
     }
     
     post {
+        always {
+            bat 'docker logout'
+        }
         success {
-            echo 'Build successful!'
+            echo 'Pipeline successful!'
             archiveArtifacts artifacts: 'target/*.war', fingerprint: true
         }
         failure {
-            echo 'Build failed. Check console output.'
+            echo 'Pipeline failed. Check console output.'
         }
     }
 }
